@@ -1,11 +1,16 @@
-import './globals.css';
-import { Inter } from 'next/font/google';
+import './globals.css'
+import { use } from 'react';
  
-const inter = Inter({ subsets: ['latin'] });
+import { Inter } from 'next/font/google'
+import Providers from '@/components/Providers'
+import AuthChangeListener from '@/components/AuthChangeListener';
+import UserSessionProvider from "@/components/UserSessionProvider";
+import loadSession from "@/lib/load-session";
  
-export const runtime = 'edge';
+const inter = Inter({ subsets: ['latin'] })
  
-// this is needed to force dynamic runtime
+// export const runtime = 'edge'; // uncomment this line to use Edge Runtime
+ 
 export const dynamic = 'force-dynamic';
  
 export const metadata = {
@@ -15,17 +20,25 @@ export const metadata = {
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
-};
+}
  
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = use(loadSession());
+ 
   return (
-    <html lang="en" className='dark'>
+    <html lang="en">
       <body className={`${inter.className} min-h-screen bg-background`}>
-        {children}
+        <AuthChangeListener session={session}>
+          <UserSessionProvider session={session}>
+            <Providers>
+              {children}
+            </Providers>
+          </UserSessionProvider>
+        </AuthChangeListener>
       </body>
     </html>
   )
