@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 
 import getOpenAIClient from '@/lib/openai-client';
 import getSupabaseServerClient from "@/lib/supabase/server-client";
-import { insertPost } from "@/lib/mutations/posts";
+import { insertPost, updatePost, deletePost } from "@/lib/mutations/posts";
  
 interface GeneratePostParams {
   title: string;
@@ -79,4 +79,37 @@ export async function createPostAction(formData: FormData) {
   // redirect to the post page.
   // NB: it will return a 404 error since we haven't implemented the post page yet
   return redirect(`/dashboard/${uuid}`);
+}
+
+export async function updatePostAction(formData: FormData) {
+  const title = formData.get('title') as string;
+  const description = formData.get('description') as string | undefined;
+  const content = formData.get('content') as string;
+  const uid = formData.get('uid') as string;
+ 
+  const client = getSupabaseServerClient();
+ 
+  await updatePost(client, {
+    title,
+    content,
+    description,
+    uid,
+  });
+ 
+  const postPath = `/dashboard/${uid}`;
+ 
+  revalidatePath(postPath);
+ 
+  return redirect(postPath);
+}
+
+export async function deletePostAction(uid: string) {
+  const client = getSupabaseServerClient();
+  const path = `/dashboard`;
+ 
+  await deletePost(client, uid);
+ 
+  revalidatePath(path);
+ 
+  return redirect(path);
 }
