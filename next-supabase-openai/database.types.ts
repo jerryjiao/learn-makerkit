@@ -34,6 +34,40 @@ export interface Database {
   }
   public: {
     Tables: {
+      customers_subscriptions: {
+        Row: {
+          customer_id: string
+          id: number
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          customer_id: string
+          id?: never
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          customer_id?: string
+          id?: never
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_subscriptions_subscription_id_fkey"
+            columns: ["subscription_id"]
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       posts: {
         Row: {
           content: string
@@ -65,6 +99,61 @@ export interface Database {
         Relationships: [
           {
             foreignKeyName: "posts_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          currency: string | null
+          id: string
+          interval: string | null
+          interval_count: number | null
+          period_ends_at: string
+          period_starts_at: string
+          price_id: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at: string | null
+          trial_starts_at: string | null
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end: boolean
+          created_at: string
+          currency?: string | null
+          id: string
+          interval?: string | null
+          interval_count?: number | null
+          period_ends_at: string
+          period_starts_at: string
+          price_id: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at?: string | null
+          trial_starts_at?: string | null
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          currency?: string | null
+          id?: string
+          interval?: string | null
+          interval_count?: number | null
+          period_ends_at?: string
+          period_starts_at?: string
+          price_id?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at?: string | null
+          trial_starts_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -107,7 +196,15 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      subscription_status:
+        | "active"
+        | "trialing"
+        | "past_due"
+        | "canceled"
+        | "unpaid"
+        | "incomplete"
+        | "incomplete_expired"
+        | "paused"
     }
     CompositeTypes: {
       [_ in never]: never

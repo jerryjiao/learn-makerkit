@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
- 
+import PricingTable from '@/components/PricingTable';
+
 export default function Home() {
   return (
     <div className='container'>
@@ -110,7 +111,21 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <hr className='border-gray-100 dark:border-slate-800' />
  
+        <div className='flex flex-col space-y-8'>
+          <div className='flex flex-col space-y-2'>
+            <h2 className='text-2xl font-semibold text-center'>
+              Pricing
+            </h2>
+        
+            <h3 className='text-lg text-center text-gray-400'>
+              The affordable choice for content creators
+            </h3>
+          </div>
+        
+          <PricingTable />
+        </div>
         <hr className='border-gray-100 dark:border-slate-800' />
  
         <footer className='py-6'>

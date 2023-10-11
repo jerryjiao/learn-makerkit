@@ -11,7 +11,8 @@
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:db:reset": "supabase db reset",
-    "typegen": "supabase gen types typescript --local > database.types.ts"
+    "typegen": "supabase gen types typescript --local > database.types.ts",
+    "stripe:listen": "docker run --rm -it --name=stripe -v ~/.config/stripe:/root/.config/stripe stripe/stripe-cli:latest listen --forward-to https://curly-enigma-x5r4gwrqr4g366ww-3000.preview.app.github.dev/stripe/webhook"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.4",
@@ -31,6 +32,7 @@
     "openai": "^4.11.1",
     "react": "latest",
     "react-dom": "latest",
+    "stripe": "^13.9.0",
     "supabase": "^1.99.5",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7"
